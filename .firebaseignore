@@ -1,0 +1,17 @@
+# Archivos de configuración de Firebase
+firebase.json
+.firebaserc
+
+# Directorio de dependencias (App Hosting las instala automáticamente)
+node_modules
+
+# Archivo de variables de entorno (los secretos se gestionan en firebase.json)
+.env
+
+# Directorio de Git
+.git
+
+# Archivos de log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

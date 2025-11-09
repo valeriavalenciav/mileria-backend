@@ -1,0 +1,10 @@
+{
+  "apphosting": {
+    "source": "src",
+    "run": "node server.js",
+    "env": {
+      "MONGODB_URI": "YOUR_MONGODB_URI_HERE",
+      "JWT_SECRET": "YOUR_JWT_SECRET_HERE"
+    }
+  }
+}
