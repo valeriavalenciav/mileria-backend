@@ -3,8 +3,8 @@
     "source": "src",
     "run": "node server.js",
     "env": {
-      "MONGODB_URI": "YOUR_MONGODB_URI_HERE",
-      "JWT_SECRET": "YOUR_JWT_SECRET_HERE"
+      "MONGODB_URI": "mongodb+srv://valeriavalencia766_db_user:HK8FseYjtMZil8ty@mileria-backend.wmgthtj.mongodb.net/?appName=mileria-backend",
+      "JWT_SECRET": "Ti.1152686122"
     }
   }
 }
