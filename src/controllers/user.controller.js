@@ -136,3 +136,28 @@ exports.deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.deleteMe = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { activo: false },
+      { new: true }
+    ).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'Usuario no encontrado'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'Tu cuenta ha sido desactivada exitosamente',
+      data: user
+    });
+  } catch (error) {
+    next(error);
+  }
+};
