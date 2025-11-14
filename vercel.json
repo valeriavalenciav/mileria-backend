@@ -11,5 +11,11 @@
       "src": "/(.*)",
       "dest": "src/server.js"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/delete-expired-accounts",
+      "schedule": "0 0 * * *"
+    }
   ]
 }

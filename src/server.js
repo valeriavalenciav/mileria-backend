@@ -4,6 +4,7 @@ const connectDB = require('./config/database');
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const favoritosRoutes = require('./routes/favoritos.routes');
+const cronRoutes = require('./routes/cron.routes'); // <-- Importar rutas del cron
 const errorHandler = require('./middlewares/errorHandler');
 require('dotenv').config();
 
@@ -46,6 +47,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/users', favoritosRoutes);
+app.use('/api/cron', cronRoutes); // <-- Usar rutas del cron
 
 // Middleware de manejo de errores
 app.use(errorHandler);
