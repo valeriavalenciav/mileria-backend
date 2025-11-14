@@ -34,9 +34,6 @@ exports.register = async (req, res, next) => {
           }
         });
       } else {
-        // El período de gracia ha expirado, el usuario debe ser eliminado permanentemente
-        // Aquí se podría llamar a una función para eliminarlo de inmediato, 
-        // o simplemente mostrar un mensaje y esperar al cron job.
         return res.status(400).json({
           success: false,
           error: 'Esta cuenta fue eliminada y ya no puede ser reactivada.'
@@ -80,23 +77,51 @@ exports.login = async (req, res, next) => {
     const { correo, password } = req.body;
     
     const user = await User.findOne({ correo });
-    
-    if (!user || !user.activo) {
-      return res.status(401).json({
-        success: false,
-        error: 'Credenciales inválidas'
-      });
+
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'Credenciales inválidas' });
     }
-    
+
     const isMatch = await user.comparePassword(password);
-    
+
     if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        error: 'Credenciales inválidas'
-      });
+      return res.status(401).json({ success: false, error: 'Credenciales inválidas' });
+    }
+
+    // Si el usuario está inactivo, intentar reactivarlo
+    if (!user.activo) {
+      if (user.eliminacionProgramada && user.eliminacionProgramada > new Date()) {
+        // Reactivar la cuenta
+        user.activo = true;
+        user.fechaEliminacion = null;
+        user.eliminacionProgramada = null;
+        await user.save();
+
+        const token = user.generateToken();
+
+        return res.json({
+          success: true,
+          message: '¡Bienvenido de vuelta! Tu cuenta ha sido reactivada.',
+          data: {
+            user: {
+              id: user._id,
+              nombre: user.nombre,
+              correo: user.correo,
+              rol: user.rol
+            },
+            token
+          }
+        });
+      } else {
+        // El período de gracia ha expirado o no hay fecha de eliminación
+        return res.status(401).json({
+          success: false,
+          error: 'Tu cuenta está inactiva y ya no puede ser reactivada.'
+        });
+      }
     }
     
+    // Si el usuario está activo, proceder con el login normal
     const token = user.generateToken();
     
     res.json({
