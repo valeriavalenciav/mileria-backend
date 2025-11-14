@@ -107,7 +107,7 @@ exports.updateUser = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
-    if (req.user.rol !== 'admin' && req.user._id.toString() !== req.params.id) {
+    if (req.user.rol !== 'admin') {
       return res.status(403).json({
         success: false,
         error: 'No tienes permiso para eliminar este usuario'
@@ -116,7 +116,11 @@ exports.deleteUser = async (req, res, next) => {
     
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { activo: false },
+      { 
+        activo: false,
+        fechaEliminacion: new Date(),
+        eliminacionProgramada: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 días
+      },
       { new: true }
     ).select('-password');
     
@@ -129,7 +133,7 @@ exports.deleteUser = async (req, res, next) => {
     
     res.json({
       success: true,
-      message: 'Usuario desactivado exitosamente',
+      message: 'Usuario desactivado. Será eliminado permanentemente en 30 días.',
       data: user
     });
   } catch (error) {
@@ -141,7 +145,11 @@ exports.deleteMe = async (req, res, next) => {
   try {
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { activo: false },
+      {
+        activo: false,
+        fechaEliminacion: new Date(),
+        eliminacionProgramada: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 días
+      },
       { new: true }
     ).select('-password');
     
@@ -154,7 +162,7 @@ exports.deleteMe = async (req, res, next) => {
     
     res.json({
       success: true,
-      message: 'Tu cuenta ha sido desactivada exitosamente',
+      message: 'Tu cuenta ha sido desactivada y será eliminada permanentemente en 30 días. Puedes reactivarla iniciando sesión nuevamente dentro de este período.',
       data: user
     });
   } catch (error) {

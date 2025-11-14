@@ -43,6 +43,12 @@ const userSchema = new mongoose.Schema({
   activo: {
     type: Boolean,
     default: true
+  },
+  fechaEliminacion: {
+    type: Date
+  },
+  eliminacionProgramada: {
+    type: Date
   }
 }, {
   timestamps: true
