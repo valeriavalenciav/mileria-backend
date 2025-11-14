@@ -169,3 +169,35 @@ exports.deleteMe = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.updateUserRole = async (req, res, next) => {
+  try {
+    if (req.user.rol !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        error: 'No tienes permiso para realizar esta acción'
+      });
+    }
+    
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { rol: 'admin' },
+      { new: true, runValidators: true }
+    ).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'Usuario no encontrado'
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'Rol de usuario actualizado a admin exitosamente',
+      data: user
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -33,6 +33,7 @@ app.get('/', (req, res) => {
         'GET /api/users': 'Listar usuarios (admin)',
         'GET /api/users/:id': 'Obtener usuario específico',
         'PUT /api/users/:id': 'Actualizar usuario',
+        'PATCH /api/users/:id/role': 'Cambiar el rol de un usuario a admin (admin)',
         'DELETE /api/users/:id': 'Desactivar usuario'
       },
       favoritos: {
